@@ -12,5 +12,8 @@
   },
   "author": "You",
   "license": "BSD",
-  "private": true
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }
