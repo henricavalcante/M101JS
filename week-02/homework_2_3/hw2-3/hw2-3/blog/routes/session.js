@@ -138,8 +138,7 @@ function SessionHandler (db) {
                         return next(err);
                     }
                 }
-
-                sessions.startSession(user['_id'], function(err, session_id) {
+                sessions.startSession(user[0]['_id'], function(err, session_id) {
                     "use strict";
 
                     if (err) return next(err);
