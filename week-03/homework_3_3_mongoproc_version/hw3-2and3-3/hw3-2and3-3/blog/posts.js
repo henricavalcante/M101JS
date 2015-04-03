@@ -28,9 +28,10 @@ function PostsDAO(db) {
                 "comments": [],
                 "date": new Date()}
 
-        // now insert the post
-        // hw3.2 TODO
-        callback(Error("insertEntry NYI"), null);
+        posts.insert(post, function(err, post) {
+            callback(err, post[0].permalink);
+        });
+        
     }
 
     this.getPosts = function(num, callback) {
@@ -80,9 +81,10 @@ function PostsDAO(db) {
         if (email != "") {
             comment['email'] = email
         }
-
-        // hw3.3 TODO
-        callback(Error("addComment NYI"), null);
+        this.getPostByPermalink(permalink, function(err, post) {
+            post.comments.push(comment);
+            posts.update({'_id': post._id}, {'$set': {'comments': post.comments}}, callback);
+        });
     }
 }
 
