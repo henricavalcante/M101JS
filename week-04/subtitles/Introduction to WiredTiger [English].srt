@@ -1,0 +1,526 @@
+1
+00:00:00,004 --> 00:00:00,009
+All right.
+
+2
+00:00:00,054 --> 00:00:01,139
+Now you know about the
+MMAP storage engine.
+
+3
+00:00:02,039 --> 00:00:04,103
+Let's talk about the Wired
+Tiger storage engine.
+
+4
+00:00:05,003 --> 00:00:09,297
+This storage is not turned on
+by default inside MongoDB in 3.0
+
+5
+00:00:09,324 --> 00:00:10,990
+but it offers some
+interesting features,
+
+6
+00:00:10,099 --> 00:00:12,191
+and for a lot of
+workloads, it is faster.
+
+7
+00:00:13,091 --> 00:00:15,163
+The first is that it offers
+document level concurrency.
+
+8
+00:00:16,063 --> 00:00:19,098
+Now, we don't call it document
+level locking because it's
+
+9
+00:00:19,098 --> 00:00:21,187
+actually a lock free
+implementation which
+
+10
+00:00:22,087 --> 00:00:25,141
+has an optimistic concurrency
+model where the storage
+
+11
+00:00:26,041 --> 00:00:28,045
+engine assumes that two
+writes are not going
+
+12
+00:00:28,081 --> 00:00:30,088
+to be to the same
+document, and if they are
+
+13
+00:00:30,088 --> 00:00:32,134
+to the same document,
+then one of those writes
+
+14
+00:00:33,034 --> 00:00:35,078
+is unwound and has to
+try again, and it's
+
+15
+00:00:35,078 --> 00:00:37,078
+invisible to the
+actual application.
+
+16
+00:00:37,078 --> 00:00:39,144
+But we do get this
+document level concurrency
+
+17
+00:00:40,044 --> 00:00:43,121
+versus collection level
+concurrency in the MMAP storage
+
+18
+00:00:44,021 --> 00:00:46,060
+engine, and that's a huge win.
+
+19
+00:00:46,006 --> 00:00:49,034
+The second is that this storage
+engine offers compression,
+
+20
+00:00:49,088 --> 00:00:51,096
+both of the documents
+themselves, of the data,
+
+21
+00:00:52,068 --> 00:00:53,432
+and of the indexes.
+
+22
+00:00:54,044 --> 00:00:55,710
+And it's beyond the
+scope of this course
+
+23
+00:00:55,071 --> 00:00:59,073
+to go over exactly how all this
+works, but just very broadly,
+
+24
+00:00:59,091 --> 00:01:01,124
+the Wired Tiger storage engine.
+
+25
+00:01:02,024 --> 00:01:04,055
+We talked before about
+having a 100 gigabyte file,
+
+26
+00:01:04,055 --> 00:01:08,062
+and if you had a 100 gigabyte
+file on disk using Wired Tiger,
+
+27
+00:01:08,062 --> 00:01:11,148
+Wired Tiger itself
+manages the memory that
+
+28
+00:01:12,048 --> 00:01:14,121
+is used to access that file.
+
+29
+00:01:15,021 --> 00:01:17,050
+So the file is
+brought in in pages,
+
+30
+00:01:17,005 --> 00:01:19,044
+and the pages can
+be of varying sizes,
+
+31
+00:01:19,089 --> 00:01:21,095
+and Wired Tiger
+decides which blocks
+
+32
+00:01:22,049 --> 00:01:24,066
+it's going to keep
+in memory and which
+
+33
+00:01:24,066 --> 00:01:26,119
+blocks to send back to disk.
+
+34
+00:01:27,019 --> 00:01:31,038
+So it's because Wired Tiger
+is managing its own storage
+
+35
+00:01:31,038 --> 00:01:34,123
+that Wired Tiger can,
+for instance, compress.
+
+36
+00:01:35,023 --> 00:01:37,023
+You don't want to keep
+it compressed in memory
+
+37
+00:01:37,023 --> 00:01:39,026
+because when you have
+read access to a document,
+
+38
+00:01:39,053 --> 00:01:41,055
+if they hit memory and
+they hit your cache of data
+
+39
+00:01:41,073 --> 00:01:44,075
+that's in memory, you don't
+want to have to decompress it.
+
+40
+00:01:44,075 --> 00:01:46,083
+And with Wired Tiger,
+you don't have to
+
+41
+00:01:46,083 --> 00:01:48,090
+because it's kept in
+the clear in memory,
+
+42
+00:01:48,009 --> 00:01:50,091
+but before they write out the
+disk, they can compress it,
+
+43
+00:01:51,072 --> 00:01:52,161
+and that saves a
+tremendous amount of space
+
+44
+00:01:53,061 --> 00:01:54,107
+for certain types of data.
+
+45
+00:01:55,007 --> 00:01:57,174
+And if you think about
+MongoDB, the keys
+
+46
+00:01:57,237 --> 00:01:59,070
+are often repeated in
+every single document,
+
+47
+00:01:59,007 --> 00:02:02,049
+so there's a lot of
+opportunities for compression.
+
+48
+00:02:02,049 --> 00:02:04,102
+Wired Tiger is also an
+append only storage engine.
+
+49
+00:02:05,002 --> 00:02:07,420
+There are no in place updates.
+
+50
+00:02:07,438 --> 00:02:09,979
+That means that if you update
+a document in Wired Tiger, what
+
+51
+00:02:09,979 --> 00:02:10,984
+they're going to
+do is they're going
+
+52
+00:02:11,479 --> 00:02:13,535
+to mark that the document
+is no longer used
+
+53
+00:02:14,039 --> 00:02:16,080
+and they're going to
+allocate new space somewhere
+
+54
+00:02:16,008 --> 00:02:18,053
+else on disk and they're
+going to write it there.
+
+55
+00:02:18,053 --> 00:02:21,090
+And eventually, they reclaim the
+space that is no longer used.
+
+56
+00:02:21,009 --> 00:02:23,055
+This can result in writing
+a lot of data sometimes.
+
+57
+00:02:24,036 --> 00:02:26,124
+If you have very large documents
+and you only update one item,
+
+58
+00:02:27,024 --> 00:02:29,119
+Wired Tiger is going to have
+to write that entire document
+
+59
+00:02:30,019 --> 00:02:33,054
+again, but it's this
+append only nature
+
+60
+00:02:33,054 --> 00:02:35,066
+of the way they
+store the data that
+
+61
+00:02:35,066 --> 00:02:38,110
+allows it to run without
+locks at the document level
+
+62
+00:02:39,001 --> 00:02:41,045
+and gives them the
+document level concurrency.
+
+63
+00:02:41,054 --> 00:02:43,117
+So overall, it's often faster.
+
+64
+00:02:44,017 --> 00:02:47,061
+If you want to start the
+database with the Wired Tiger
+
+65
+00:02:47,061 --> 00:02:49,108
+storage engine,
+you can do it using
+
+66
+00:02:50,008 --> 00:02:55,015
+the flag -storageEngine and
+then after that, wired tiger.
+
+67
+00:02:55,078 --> 00:02:56,161
+My handwriting's
+kind of poor, so I'm
+
+68
+00:02:57,061 --> 00:02:59,108
+going to show you on the
+screen what this looks like.
+
+69
+00:03:00,008 --> 00:03:01,382
+So the first thing
+you want to do
+
+70
+00:03:01,454 --> 00:03:04,460
+is kill your existing
+mongod process,
+
+71
+00:03:04,046 --> 00:03:07,098
+and then you can create a new
+directory, for instance, called
+
+72
+00:03:07,098 --> 00:03:10,164
+WT for Wired Tiger, and
+then you could start Mongo
+
+73
+00:03:11,064 --> 00:03:16,073
+by telling it to use that
+directory, dbpath Wired Tiger.
+
+74
+00:03:16,073 --> 00:03:18,088
+That tells it to use this
+Wired Tiger directory.
+
+75
+00:03:18,088 --> 00:03:20,419
+I'll do .WT, although I
+don't think I need that.
+
+76
+00:03:21,211 --> 00:03:22,710
+Actually, I don't
+think I need that.
+
+77
+00:03:22,071 --> 00:03:25,079
+dbpath WT, put the
+files in that directory,
+
+78
+00:03:25,079 --> 00:03:29,174
+and then I would need to give
+it the storageEngine flag
+
+79
+00:03:30,074 --> 00:03:31,161
+and then say Wired Tiger.
+
+80
+00:03:32,061 --> 00:03:33,160
+So mongod -dbpath.
+
+81
+00:03:34,006 --> 00:03:36,087
+Normally, it defaults into
+/data/db if you don't give it
+
+82
+00:03:37,041 --> 00:03:39,103
+any arguments, but we need a
+new directory because the Wired
+
+83
+00:03:40,003 --> 00:03:43,005
+Tiger storage engine cannot open
+the files created by MMAP V1.
+
+84
+00:03:43,023 --> 00:03:45,095
+So if you have been running
+MongoDB on your computer,
+
+85
+00:03:45,095 --> 00:03:47,116
+on your desktop, for
+example, and you kill it,
+
+86
+00:03:48,016 --> 00:03:50,090
+and you try to start up using
+storage engine Wired Tiger,
+
+87
+00:03:50,009 --> 00:03:52,054
+it won't work because it
+can't read those files.
+
+88
+00:03:53,035 --> 00:03:57,039
+So if we hit Return, you can
+see that Wired Tiger is starting
+
+89
+00:03:57,039 --> 00:04:01,100
+and it's listening on
+27017, and that if we just
+
+90
+00:04:02,000 --> 00:04:04,026
+clear the screen and
+connect using Mongo,
+
+91
+00:04:04,026 --> 00:04:09,075
+then we can do
+db.foo.insert name andrew.
+
+92
+00:04:09,075 --> 00:04:11,133
+And now we've written something
+into a Wired Tiger based
+
+93
+00:04:12,033 --> 00:04:14,038
+storage engine inside MongoDB.
+
+94
+00:04:14,083 --> 00:04:16,161
+And if I want to know that it
+is a Wired Tiger based storage
+
+95
+00:04:17,061 --> 00:04:18,790
+engine, I'm in the
+test database right
+
+96
+00:04:19,339 --> 00:04:21,790
+now and the foo collection.
+
+97
+00:04:21,079 --> 00:04:22,694
+If you call
+db.foo.stats, you can
+
+98
+00:04:23,405 --> 00:04:25,530
+see it tells you a bunch
+of things about the stats,
+
+99
+00:04:25,053 --> 00:04:27,132
+about this collection, including
+its size, which is small,
+
+100
+00:04:28,032 --> 00:04:31,055
+and that it has this Wired Tiger
+key that tells you that it's
+
+101
+00:04:31,055 --> 00:04:33,121
+a Wired Tiger collection.
+
+102
+00:04:34,021 --> 00:04:35,038
+So that's it.
+
+103
+00:04:35,038 --> 00:04:36,309
+Now it's time for a quiz.
+
+104
+00:04:36,651 --> 00:04:38,900
+Which of the following are
+features of the Wired Tiger
+
+105
+00:04:38,009 --> 00:04:38,090
+storage engine?
+
+106
+00:04:39,071 --> 00:04:40,074
+Check all that apply.
+
+107
+00:04:41,001 --> 00:04:44,052
+In place update of documents,
+power of two document padding,
+
+108
+00:04:44,052 --> 00:04:48,055
+document level concurrency,
+compression, and turbocharged.
+
+109
+00:04:48,055 --> 00:04:49,132
+Which of these are true?
+

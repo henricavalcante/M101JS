@@ -1,0 +1,151 @@
+1
+00:00:00,006 --> 00:00:03,080
+okay knowing how to create indexes on a
+collection how would you discover what
+
+2
+00:00:03,008 --> 00:00:04,084
+indexes are already on the collection
+
+3
+00:00:05,056 --> 00:00:08,075
+well we can do that with the get indexes
+command
+
+4
+00:00:08,075 --> 00:00:11,794
+so I'm gonna start them on a shell again
+in once again I'm any use the
+
+5
+00:00:12,469 --> 00:00:15,910
+school database and then I'm going to
+call
+
+6
+00:00:15,091 --> 00:00:18,290
+DB dot students got get indexes
+
+7
+00:00:19,109 --> 00:00:22,320
+students the name the collection and as
+you remember the last lesson we just
+
+8
+00:00:22,032 --> 00:00:23,056
+added an index to it
+
+9
+00:00:23,056 --> 00:00:27,685
+first to ninety recall getting Nexus if
+we do that we get back
+
+10
+00:00:28,189 --> 00:00:31,271
+this result which is a document actually
+to the rave to documents
+
+11
+00:00:32,009 --> 00:00:35,160
+and the first one tell you that there is
+an
+
+12
+00:00:35,016 --> 00:00:39,051
+index underscore I D now this index
+exist in all collections and you can't
+
+13
+00:00:39,051 --> 00:00:43,070
+delete there's also an index on student
+underscored a
+
+14
+00:00:43,007 --> 00:00:46,016
+and that index we just created and we
+wanted to you
+
+15
+00:00:47,006 --> 00:00:50,031
+get rid of that index we would call DB
+
+16
+00:00:50,085 --> 00:00:53,544
+dot Stevens dot drop in X and
+
+17
+00:00:54,309 --> 00:00:57,327
+provide this exact same signature as we
+created
+
+18
+00:00:57,489 --> 00:01:01,840
+so here are calling drop in tax and
+we're giving the same signature students
+
+19
+00:01:01,084 --> 00:01:03,143
+cried econ one that we gave we created
+the index
+
+20
+00:01:04,043 --> 00:01:08,061
+if we do that we should be able to drop
+and there you go
+
+21
+00:01:08,061 --> 00:01:11,093
+I'm indexes was too and now it's one and
+
+22
+00:01:11,093 --> 00:01:14,167
+if we get index is again will see that
+in fact
+
+23
+00:01:15,067 --> 00:01:18,070
+there is only one index perfect alright
+
+24
+00:01:18,097 --> 00:01:21,118
+one last point I want to make is that
+this call get indexes
+
+25
+00:01:22,018 --> 00:01:26,060
+is a call that you use in Mongo DB 3.0
+
+26
+00:01:26,006 --> 00:01:30,095
+and will work on both wired tiger and
+I'm at b1
+
+27
+00:01:30,689 --> 00:01:33,728
+and an earlier version to the database
+you could
+
+28
+00:01:34,079 --> 00:01:37,140
+look at a special collection system the
+indexes
+
+29
+00:01:37,689 --> 00:01:40,703
+to see you indexes existed that does not
+work
+
+30
+00:01:40,829 --> 00:01:45,110
+in wire tiger and so that preferred way
+to figure out what next on a collection
+
+31
+00:01:45,011 --> 00:01:48,086
+is to do this to call DB that students
+that it can indexes and again
+
+32
+00:01:48,086 --> 00:01:50,113
+is a change in Mongo DB 3.0
+

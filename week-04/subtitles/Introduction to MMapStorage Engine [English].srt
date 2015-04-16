@@ -1,0 +1,400 @@
+1
+00:00:00,049 --> 00:00:03,136
+let's talk about the m map storage
+engine we call em at b1
+
+2
+00:00:03,919 --> 00:00:06,950
+the original stored engine Mongo DB and
+it uses the
+
+3
+00:00:06,095 --> 00:00:09,534
+m ap system call under the covers in
+order to implement
+
+4
+00:00:10,389 --> 00:00:14,330
+storage management let's look at what
+them out to them call
+
+5
+00:00:14,033 --> 00:00:19,062
+looks like it's right here if you do on
+any UNIX machine if you man and map
+
+6
+00:00:19,359 --> 00:00:23,500
+you'll see their talks about allocating
+memory or mapping files are devices into
+
+7
+00:00:23,005 --> 00:00:23,054
+memory
+
+8
+00:00:23,099 --> 00:00:27,106
+cause the pages starting in addressing
+continuing for most left by three maps
+
+9
+00:00:28,006 --> 00:00:29,100
+in the object described by the fountain
+scripture
+
+10
+00:00:30,000 --> 00:00:33,039
+an offset so what does that mean that
+practically mean
+
+11
+00:00:33,039 --> 00:00:37,082
+well mommy be the place to put documents
+and put a document inside files
+
+12
+00:00:37,082 --> 00:00:42,087
+and to do that initially allocates let's
+say a large file a TLK two hundred
+
+13
+00:00:42,087 --> 00:00:43,136
+gigabyte file on disk
+
+14
+00:00:44,036 --> 00:00:47,055
+21 it with a hundred about file on desk
+right here
+
+15
+00:00:47,379 --> 00:00:51,000
+and this this may or may not be
+physically contiguous on the actual disc
+
+16
+00:00:51,000 --> 00:00:52,199
+is there some I rhythms that
+
+17
+00:00:52,199 --> 00:00:56,010
+occur beneath that layer that control
+the actual allocation of space and a
+
+18
+00:00:56,001 --> 00:00:56,053
+desk
+
+19
+00:00:56,053 --> 00:01:00,116
+but from our standpoint 200 by
+continuous file if mommy because the AM
+
+20
+00:01:01,016 --> 00:01:02,034
+map system call
+
+21
+00:01:02,034 --> 00:01:07,423
+it can map this file 100 about file into
+100 gigabytes a virtual memory
+
+22
+00:01:07,729 --> 00:01:11,260
+now to do that of course we need to be
+on a 64 bit computer
+
+23
+00:01:11,026 --> 00:01:15,059
+because you can never get a hundred
+gigabytes virtual memory space on 32-bit
+
+24
+00:01:15,059 --> 00:01:17,097
+computer you'd be limited to two or four
+gigabytes
+
+25
+00:01:17,097 --> 00:01:22,179
+and these are all paid sized so pages on
+operators demory therefore care 16k
+
+26
+00:01:23,079 --> 00:01:26,115
+large show there's a lot of them they're
+not showing here
+
+27
+00:01:27,015 --> 00:01:30,057
+and they are pretty stems gonna decide
+what can fit in memory
+
+28
+00:01:30,057 --> 00:01:34,070
+so if the actual physical memory in the
+boxes that say 32 gigabytes
+
+29
+00:01:34,007 --> 00:01:38,022
+then if I go to access one of the pages
+in this memory space
+
+30
+00:01:38,085 --> 00:01:41,170
+maybe not be a memory at any given time
+they are prints from the sides
+
+31
+00:01:42,007 --> 00:01:45,046
+which these pages are going to be a
+memory other to the green ones are in
+
+32
+00:01:46,009 --> 00:01:46,067
+memory
+
+33
+00:01:46,067 --> 00:01:49,104
+and so when you go to read a document if
+it hits a page that
+
+34
+00:01:50,004 --> 00:01:53,099
+in memory then you get it and even if
+the page that's not memory that say this
+
+35
+00:01:53,099 --> 00:01:53,104
+page
+
+36
+00:01:54,049 --> 00:01:57,113
+then the operating system has two bring
+it from desk
+
+37
+00:01:58,013 --> 00:02:02,252
+this is on this care as the ring at
+front desk into memory before:
+
+38
+00:02:02,369 --> 00:02:05,430
+you can access it and that the basics
+love where the a map storage engine
+
+39
+00:02:05,979 --> 00:02:06,500
+works
+
+40
+00:02:06,005 --> 00:02:10,634
+now their map storage engine offers
+collection level concurrency
+
+41
+00:02:11,129 --> 00:02:13,680
+or we sometimes call collection level
+locking
+
+42
+00:02:13,068 --> 00:02:16,106
+each collection inside Mon BB his own
+file
+
+43
+00:02:17,006 --> 00:02:20,075
+if you look in Davis last TB so that
+means that if you have two different
+
+44
+00:02:20,075 --> 00:02:21,168
+operations going on at the same time
+
+45
+00:02:22,068 --> 00:02:25,135
+and they are in the same collection was
+gonna have to wait for the other one if
+
+46
+00:02:26,035 --> 00:02:26,114
+they're right
+
+47
+00:02:27,014 --> 00:02:31,028
+because it's a multiple readers single
+writer locked that text
+
+48
+00:02:31,028 --> 00:02:34,104
+so only one right can happen at a time
+to a particular collection
+
+49
+00:02:35,004 --> 00:02:38,023
+but if they're different collections and
+it could happen simultaneously
+
+50
+00:02:38,023 --> 00:02:41,026
+in addition the way the storied engine
+works a map v1
+
+51
+00:02:41,053 --> 00:02:45,111
+we allow in place updates our data to
+the document is sitting here in this a
+
+52
+00:02:46,011 --> 00:02:46,104
+paid right here
+
+53
+00:02:47,004 --> 00:02:50,061
+and you an update to it then we'll try
+to update it right in place
+
+54
+00:02:50,061 --> 00:02:53,140
+and if we can update it they will do is
+well market as a whole
+
+55
+00:02:54,004 --> 00:02:57,011
+and then we'll move it somewhere else
+where there is more space or moved over
+
+56
+00:02:57,047 --> 00:02:57,121
+here or something
+
+57
+00:02:58,021 --> 00:03:01,077
+and the mop head over there you were to
+make it more likely that we can update a
+
+58
+00:03:01,077 --> 00:03:02,134
+doctor in place without having
+
+59
+00:03:03,034 --> 00:03:07,089
+to move it we use power of two sizes
+
+60
+00:03:07,089 --> 00:03:12,115
+when we allocate the initial storage for
+document that means that if you try to
+
+61
+00:03:13,015 --> 00:03:16,053
+create a free by document unit 4 buy it
+if you try to clean
+
+62
+00:03:16,053 --> 00:03:20,132
+a seven by documenting a bytes and
+nineteen bite document you're gonna get
+
+63
+00:03:21,032 --> 00:03:25,097
+32 bytes and this way it's more likely
+that you can grow the document orbit
+
+64
+00:03:25,097 --> 00:03:28,179
+and that space that opens up that we can
+reuse it more easily
+
+65
+00:03:29,079 --> 00:03:32,082
+so that the M maps toward engine and
+
+66
+00:03:32,082 --> 00:03:34,159
+you'll notice that since the operating
+system is what makes a decision about
+
+67
+00:03:35,059 --> 00:03:36,063
+what is in memory
+
+68
+00:03:36,099 --> 00:03:40,130
+purses what is in desk we can't really
+do much in terms of controlling that
+
+69
+00:03:41,003 --> 00:03:44,085
+Japanese firms pretty smart about
+managing memory so
+
+70
+00:03:45,012 --> 00:03:48,105
+it's usually not about algorithm but
+database doesn't get too
+
+71
+00:03:49,005 --> 00:03:52,088
+the side or contributed to pinyin about
+what wind up
+
+72
+00:03:52,088 --> 00:03:55,166
+in physical memory verses what went up
+on desk and
+
+73
+00:03:56,066 --> 00:03:59,068
+if you're curious about the waiver to
+memory works in general just you go over
+
+74
+00:03:59,068 --> 00:04:00,117
+to memory and storage systems and
+
+75
+00:04:01,017 --> 00:04:04,053
+it's the same algorithms that are used
+to manage memory inside
+
+76
+00:04:04,053 --> 00:04:07,087
+the opposite them for all programs okay
+now it's time for quiz
+
+77
+00:04:07,087 --> 00:04:11,122
+which the following statements about the
+MFB 1/ storage engine are true
+
+78
+00:04:12,022 --> 00:04:15,094
+check all that apply the first the IM
+app offers doctor unlocking
+
+79
+00:04:15,094 --> 00:04:18,146
+the second a.m. app automatically
+allocates power to size documents a new
+
+80
+00:04:19,046 --> 00:04:20,195
+documents are inserted
+
+81
+00:04:20,609 --> 00:04:24,643
+the third a map it doesn't happen the a
+map system called naps files into memory
+
+82
+00:04:24,949 --> 00:04:28,150
+and the final one is that mom would be
+mad to the memories by each map file
+
+83
+00:04:28,015 --> 00:04:29,100
+deciding which parts what the desk
+
+84
+00:04:30,000 --> 00:04:32,012
+so Tech 21 you think are correct
+

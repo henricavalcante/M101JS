@@ -1,0 +1,464 @@
+1
+00:00:00,006 --> 00:00:03,325
+now I'd like to show you a large
+collection and the
+
+2
+00:00:03,379 --> 00:00:06,467
+impact that indexes can have on
+performance so I've loaded up
+
+3
+00:00:07,259 --> 00:00:10,900
+ten million documents into a collection
+and I'm gonna show you that in the Mongo
+
+4
+00:00:10,009 --> 00:00:10,014
+shell
+
+5
+00:00:11,004 --> 00:00:15,010
+its in the school database in the
+student collection
+
+6
+00:00:16,000 --> 00:00:19,032
+and i'm looking a single document in the
+collection which is a great way to get
+
+7
+00:00:19,032 --> 00:00:19,123
+an understanding
+
+8
+00:00:20,023 --> 00:00:23,065
+on what they look like assuming its
+regular and it is in this case
+
+9
+00:00:23,065 --> 00:00:26,107
+you can see each document has 290
+
+10
+00:00:27,007 --> 00:00:30,012
+and a buncha scores for the student is a
+force s mental exam a quiz and homework
+
+11
+00:00:30,057 --> 00:00:30,139
+homework
+
+12
+00:00:31,039 --> 00:00:34,055
+this is the grades they got in this
+particular class
+
+13
+00:00:34,055 --> 00:00:37,059
+and so their $10 million documents so
+
+14
+00:00:37,059 --> 00:00:41,798
+is one million students have each taken
+ten classes now there's absolutely
+
+15
+00:00:42,329 --> 00:00:46,000
+no indexes on this collection so let's
+see how long it would take
+
+16
+00:00:46,000 --> 00:00:49,077
+to do occur in this collection and try
+to find
+
+17
+00:00:49,077 --> 00:00:52,112
+all the information for student ID let's
+say five
+
+18
+00:00:53,012 --> 00:00:56,060
+which should be very early in their
+collection to just inserted
+
+19
+00:00:56,006 --> 00:00:59,006
+it was probably inserted in order on the
+desk
+
+20
+00:00:59,006 --> 00:01:02,049
+and it I'm running the MFB 1/ stored
+engine in this case all right let's do
+
+21
+00:01:03,003 --> 00:01:03,048
+that
+
+22
+00:01:03,048 --> 00:01:06,120
+all right that took a few seconds to
+return those 10 documents
+
+23
+00:01:07,002 --> 00:01:12,061
+and this is a fast computer this is a4
+gigahertz core i7 computer with 32
+
+24
+00:01:12,079 --> 00:01:13,122
+gigabytes of memory
+
+25
+00:01:14,022 --> 00:01:18,028
+and a fusion drive has a combination SSD
+
+26
+00:01:18,028 --> 00:01:23,031
+and speed is gone so that a long time
+that a lot of cycles
+
+27
+00:01:23,058 --> 00:01:27,027
+for a computer this fast so the question
+is
+
+28
+00:01:27,549 --> 00:01:30,631
+how Queen make it faster before do that
+I want to show you a couple things
+
+29
+00:01:31,369 --> 00:01:35,350
+first is that there is an explain
+command that we're going over in a
+
+30
+00:01:35,035 --> 00:01:35,124
+little lesson
+
+31
+00:01:36,024 --> 00:01:40,013
+that will show you the secret that what
+the database is doing
+
+32
+00:01:40,229 --> 00:01:44,220
+when execute a query and I work if you
+will for shadowing this command
+
+33
+00:01:44,022 --> 00:01:48,451
+it runs on top of a collection so DB
+that students dans the collection
+
+34
+00:01:48,649 --> 00:01:49,696
+explain is the command
+
+35
+00:01:50,119 --> 00:01:54,137
+and then the chain what you wanna do in
+this case you want to find you can also
+
+36
+00:01:54,299 --> 00:01:57,302
+chain update or delete and
+
+37
+00:01:57,329 --> 00:02:00,700
+it's going to tell you what index is it
+would have used to
+
+38
+00:02:00,007 --> 00:02:03,015
+satisfy this great now in this case
+there are any index is it can use
+
+39
+00:02:03,078 --> 00:02:06,163
+and it's going to scan all ten million
+document it should tell us that
+
+40
+00:02:07,063 --> 00:02:12,062
+so we look to the output explain will go
+through it more detail later lesson
+
+41
+00:02:12,629 --> 00:02:16,170
+the interesting part is right here in
+the winning plan section where you can
+
+42
+00:02:16,017 --> 00:02:17,086
+see it says
+
+43
+00:02:17,239 --> 00:02:20,420
+it's doing art collection scam it's
+looking at
+
+44
+00:02:20,042 --> 00:02:23,641
+all the documents and that's that's
+going to be pretty slow
+
+45
+00:02:24,019 --> 00:02:27,110
+now if we actually to find one
+
+46
+00:02:27,011 --> 00:02:30,036
+versus the find then it'll be faster
+
+47
+00:02:30,036 --> 00:02:34,048
+and the reason it'll be faster is that
+wanted find a single document they can
+
+48
+00:02:34,048 --> 00:02:34,129
+quit looking
+
+49
+00:02:35,029 --> 00:02:40,037
+and so since the documents are probably
+in 290 or approximately right now
+
+50
+00:02:40,037 --> 00:02:43,093
+that can be fairly fast you can see that
+was fast
+
+51
+00:02:43,093 --> 00:02:48,179
+didn't take very long for it to return a
+single document for this 295 but we want
+
+52
+00:02:49,079 --> 00:02:50,448
+general find to work well
+
+53
+00:02:51,159 --> 00:02:55,164
+so 11 an index how do we do that let's
+at the annex
+
+54
+00:02:55,209 --> 00:02:58,276
+DB dot students dot create index
+
+55
+00:02:58,879 --> 00:03:01,954
+and there is a scam case inside the
+shell lo que sea
+
+56
+00:03:02,629 --> 00:03:07,690
+upper case I and now we're going to
+present the document to create an axe
+
+57
+00:03:07,069 --> 00:03:10,145
+that describes the index and this case
+
+58
+00:03:11,045 --> 00:03:14,504
+we're saying we want it to be indexed on
+student ID ascending
+
+59
+00:03:14,909 --> 00:03:18,003
+we'll talk all the more about what that
+means later but we're gonna hit return
+
+60
+00:03:18,849 --> 00:03:21,540
+this can take a while so I'm gonna time
+this off-camera
+
+61
+00:03:21,054 --> 00:03:24,090
+so I can tell you how long it took on
+this superfast computer
+
+62
+00:03:24,009 --> 00:03:28,318
+here we go okay it took about twenty
+three seconds on this computer to create
+
+63
+00:03:29,209 --> 00:03:30,010
+this index
+
+64
+00:03:30,001 --> 00:03:33,094
+and that's important to note because
+even a really fast computer
+
+65
+00:03:33,094 --> 00:03:37,118
+creating index takes a while because we
+have to scan the entire collection
+
+66
+00:03:38,018 --> 00:03:41,021
+create new data structures and write
+them all to desk
+
+67
+00:03:41,048 --> 00:03:44,051
+right now that we have index this search
+on
+
+68
+00:03:44,051 --> 00:03:48,430
+finding all the students with 295 should
+be nice and fast
+
+69
+00:03:48,889 --> 00:03:51,910
+let's see if this who night in fast
+
+70
+00:03:52,099 --> 00:03:55,125
+and it was and everyone explain command
+
+71
+00:03:55,359 --> 00:03:58,406
+we're gonna see that it now using index
+
+72
+00:03:58,829 --> 00:04:02,834
+slut see that alright I ran the explain
+command once again
+
+73
+00:04:02,879 --> 00:04:06,890
+and you can see now it says the winning
+plan for this type of query
+
+74
+00:04:06,989 --> 00:04:11,010
+is the use the index name student
+underscored the one not fantastic
+
+75
+00:04:11,001 --> 00:04:14,004
+and one little other secret able explain
+
+76
+00:04:14,031 --> 00:04:18,109
+that if re give a true and there's two
+ways to give arguments to explain this
+
+77
+00:04:19,009 --> 00:04:20,328
+is actually the older one
+
+78
+00:04:20,409 --> 00:04:23,750
+then it'll actually run the query as
+well which means you can tell us how
+
+79
+00:04:23,075 --> 00:04:23,121
+many
+
+80
+00:04:24,021 --> 00:04:25,078
+document actually
+
+81
+00:04:25,078 --> 00:04:28,141
+looked at in the execution stages the
+query and you can see
+
+82
+00:04:29,041 --> 00:04:32,270
+that number of documents examined was
+exactly
+
+83
+00:04:32,639 --> 00:04:37,600
+10 net pretty cool want to use the index
+only had actually look at 10 documents
+
+84
+00:04:37,006 --> 00:04:41,055
+Wow at fantastic alright now you can
+also add a compound index
+
+85
+00:04:42,009 --> 00:04:45,025
+to this collection and we want to add a
+compound index
+
+86
+00:04:45,025 --> 00:04:48,110
+we would do it as such we would give a
+second key
+
+87
+00:04:49,001 --> 00:04:53,063
+and then ascending or descending so for
+instance this is the command you'd give
+
+88
+00:04:53,072 --> 00:04:56,157
+to create an index on student ID comma
+class ID
+
+89
+00:04:57,057 --> 00:05:01,059
+with us tonight the part was ascending
+and the class any part was descending
+
+90
+00:05:01,059 --> 00:05:05,093
+and this will affect the grease we just
+did but they will affect
+
+91
+00:05:05,093 --> 00:05:08,181
+things like sorting where if the index
+is aren't in the right order and
+
+92
+00:05:09,081 --> 00:05:10,125
+depending on how specify the sort
+
+93
+00:05:11,025 --> 00:05:14,048
+you may not be able to use the index
+okay
+
+94
+00:05:14,048 --> 00:05:17,066
+so now it is time for requests
+
+95
+00:05:17,066 --> 00:05:20,072
+please read the manga show command to
+add in next to a collection name
+
+96
+00:05:21,026 --> 00:05:22,108
+students having the index key
+
+97
+00:05:23,008 --> 00:05:26,817
+be class commerce student underscore
+name and neither these will be in the
+
+98
+00:05:26,889 --> 00:05:27,900
+minus one direction
+
+99
+00:05:27,009 --> 00:05:28,031
+type your answer right here
+

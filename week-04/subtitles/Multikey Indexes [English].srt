@@ -1,0 +1,551 @@
+1
+00:00:00,007 --> 00:00:04,036
+let's talk about creating indexes on
+arrays we call these indexes
+
+2
+00:00:04,036 --> 00:00:07,048
+multi key indexes so imagine you have a
+collection
+
+3
+00:00:07,048 --> 00:00:10,130
+document that look similar to this: this
+document has named Andrew
+
+4
+00:00:11,003 --> 00:00:14,098
+tags: photography hiking in golf some of
+my passions
+
+5
+00:00:15,025 --> 00:00:18,052
+color red I don't know why I just picked
+it and then
+
+6
+00:00:18,052 --> 00:00:21,641
+location is also an array New York Comic
+California
+
+7
+00:00:22,109 --> 00:00:25,380
+you can create and index on tax
+
+8
+00:00:25,038 --> 00:00:28,105
+and if you do that they were among the
+DB indexes
+
+9
+00:00:29,005 --> 00:00:32,023
+the collection and if the stock already
+in there
+
+10
+00:00:32,023 --> 00:00:36,037
+then it would create an index point for
+photography hiking in Gulf
+
+11
+00:00:36,037 --> 00:00:39,048
+you can also create an index on if you
+wanted
+
+12
+00:00:39,048 --> 00:00:43,307
+tags: comma color and in that case
+
+13
+00:00:43,739 --> 00:00:47,100
+Mon BB would create for instance for
+this document
+
+14
+00:00:47,001 --> 00:00:50,370
+index points for photography red
+
+15
+00:00:50,469 --> 00:00:54,020
+hiking reading girlfriend now mode the
+key indexes
+
+16
+00:00:54,002 --> 00:00:57,611
+become all the key indexes with the
+database realizes that their is a
+
+17
+00:00:57,629 --> 00:00:58,410
+document
+
+18
+00:00:58,041 --> 00:01:01,460
+with an array as one of the keys up the
+index
+
+19
+00:01:01,829 --> 00:01:04,895
+and there are restrictions on use some
+of the key indexes
+
+20
+00:01:05,489 --> 00:01:10,460
+in particular you can't have two items
+at a compound in texas is a compound
+
+21
+00:01:10,046 --> 00:01:10,109
+index
+
+22
+00:01:11,009 --> 00:01:14,101
+where both them are a race so for
+instance
+
+23
+00:01:15,001 --> 00:01:18,360
+this index would not be legal tags:
+
+24
+00:01:18,369 --> 00:01:22,210
+comma location if there was already a
+document in the collection
+
+25
+00:01:22,021 --> 00:01:25,540
+where both tags: and location were a
+race
+
+26
+00:01:25,729 --> 00:01:29,070
+and when Mama you tell you that can't
+index parallel rays
+
+27
+00:01:29,007 --> 00:01:32,088
+and the reason is there's an explosion
+in export the created because has to
+
+28
+00:01:32,088 --> 00:01:34,143
+grade index point for the cartesian
+product on the item's
+
+29
+00:01:35,043 --> 00:01:39,044
+in the race and it doesn't permit that
+nothing to remember
+
+30
+00:01:39,053 --> 00:01:41,114
+is that when you first create an index
+it there's nothing nothing in the
+
+31
+00:01:42,014 --> 00:01:42,020
+collection
+
+32
+00:01:42,074 --> 00:01:45,097
+Mongo DB doesn't know that there maybe
+
+33
+00:01:45,097 --> 00:01:49,175
+an array for instance in tags in the
+future and so on index only becomes more
+
+34
+00:01:50,075 --> 00:01:51,904
+ticket when the first document it
+
+35
+00:01:52,579 --> 00:01:55,590
+added has as its value for the keys
+
+36
+00:01:55,059 --> 00:01:58,146
+an array so that sounds kinda
+complicated let's go through a concrete
+
+37
+00:01:59,046 --> 00:02:00,117
+Lee and look inside the shell
+
+38
+00:02:01,017 --> 00:02:04,052
+to get a better understanding of how
+this works alright
+
+39
+00:02:04,052 --> 00:02:08,161
+so let's start the Mongo shell buffoon
+collection which is empty
+
+40
+00:02:08,629 --> 00:02:12,050
+recruit a simple document where A's won
+
+41
+00:02:12,005 --> 00:02:15,011
+and B is to okay and if we do that
+
+42
+00:02:15,065 --> 00:02:21,080
+get certain you can see it in there no
+problem now he wanted to create an index
+
+43
+00:02:21,008 --> 00:02:25,042
+on a comedy we could do that by typing
+DB dot
+
+44
+00:02:26,014 --> 00:02:29,029
+food ot create index a
+
+45
+00:02:29,029 --> 00:02:33,044
+ascending be sending there was one in it
+now there are two
+
+46
+00:02:33,044 --> 00:02:36,117
+and if we use our friendly explain
+command that we're getting to know
+
+47
+00:02:37,017 --> 00:02:38,018
+better and better
+
+48
+00:02:38,027 --> 00:02:41,111
+foo collection I'll explain and then to
+a find
+
+49
+00:02:42,011 --> 00:02:45,045
+where it's a a is one perfectly
+reasonable
+
+50
+00:02:45,045 --> 00:02:50,076
+query how A's 1b is one will say we can
+look here and we can see that
+
+51
+00:02:50,076 --> 00:02:53,148
+in the query planner stage at this
+explain output
+
+52
+00:02:54,048 --> 00:02:58,129
+it tells about the winning plan and the
+winning plan
+
+53
+00:02:59,029 --> 00:03:02,033
+was to use index can on the index
+
+54
+00:03:02,033 --> 00:03:06,055
+a underscore 1b underscore one and
+that's the name for the a comer be index
+
+55
+00:03:06,055 --> 00:03:09,090
+if we do get indexes we'd see that and
+it tells us
+
+56
+00:03:09,009 --> 00:03:12,068
+that it is not morteki index okay
+
+57
+00:03:13,049 --> 00:03:17,075
+fair enough well that makes sense i mean
+is not much in this thing we saw that
+
+58
+00:03:17,075 --> 00:03:20,097
+all there is is the single document and
+it doesn't have an already the part
+
+59
+00:03:20,097 --> 00:03:24,151
+but now let's insert something else into
+here let's answer document
+
+60
+00:03:25,051 --> 00:03:28,108
+where a is three and be
+
+61
+00:03:29,008 --> 00:03:32,387
+is a reggae 3 come five common 7 now
+
+62
+00:03:32,459 --> 00:03:35,760
+if we did that now at this point
+
+63
+00:03:35,076 --> 00:03:40,079
+if we run the exact same career and
+before and we do a find
+
+64
+00:03:40,079 --> 00:03:44,095
+a couple one becoming one and we're at
+the explain command
+
+65
+00:03:44,095 --> 00:03:47,634
+then way up we get sick well
+
+66
+00:03:48,489 --> 00:03:51,580
+once again it tells us that using this
+index
+
+67
+00:03:51,058 --> 00:03:54,079
+a comer be a and a score 1 p.m. square
+one index
+
+68
+00:03:54,079 --> 00:03:58,087
+but this time it says multi key true and
+every course issue this command without
+
+69
+00:03:59,059 --> 00:04:00,063
+the explain
+
+70
+00:04:00,063 --> 00:04:03,130
+it would find exactly no document
+because there are no documents
+
+71
+00:04:04,003 --> 00:04:07,092
+but as far as criteria not see what was
+in the collections we can get a better
+
+72
+00:04:08,019 --> 00:04:08,084
+query
+
+73
+00:04:08,084 --> 00:04:12,107
+we have a come a three and become a five
+let's look for
+
+74
+00:04:13,007 --> 00:04:16,100
+documents that have a comma three and
+become a five that'll be in there
+
+75
+00:04:17,000 --> 00:04:20,053
+a comer 3 become a five now for did that
+
+76
+00:04:20,053 --> 00:04:23,053
+then we get the one document right there
+
+77
+00:04:23,053 --> 00:04:24,142
+and again if we look at it we
+
+78
+00:04:25,042 --> 00:04:29,046
+explain will see that query also
+produces same as all telling us that
+
+79
+00:04:29,082 --> 00:04:31,118
+using the multi key index the index has
+been
+
+80
+00:04:32,018 --> 00:04:36,107
+ritmo de ke and again if you do get an
+excellent collection
+
+81
+00:04:37,007 --> 00:04:41,021
+you'll see that the index is called and
+a score one being square one
+
+82
+00:04:41,021 --> 00:04:45,052
+what we saw inside explain up let's say
+we did something else let's say that we
+
+83
+00:04:45,052 --> 00:04:46,057
+actually now
+
+84
+00:04:46,057 --> 00:04:49,078
+inserted something in this collection
+where both
+
+85
+00:04:49,078 --> 00:04:52,176
+a NBA worries like for instance 345
+
+86
+00:04:53,076 --> 00:04:56,090
+and B is 789
+
+87
+00:04:56,009 --> 00:04:59,043
+if we insert something into the
+collection or both
+
+88
+00:05:00,024 --> 00:05:03,080
+anbe RA's stock at work
+
+89
+00:05:03,008 --> 00:05:06,071
+to say I'm sorry I can't put anything
+into this
+
+90
+00:05:07,043 --> 00:05:10,091
+index we're both A&B are both a race
+
+91
+00:05:10,091 --> 00:05:14,130
+alright so this makes sense I mean we
+have this collection
+
+92
+00:05:15,003 --> 00:05:18,006
+and we can see what's in it we can see
+that we have
+
+93
+00:05:18,033 --> 00:05:21,094
+two different documents in the second
+one B is a list or array in
+
+94
+00:05:21,094 --> 00:05:24,122
+NA is not what if we wanted to insert
+something
+
+95
+00:05:25,022 --> 00:05:28,061
+where a was a last NB was
+
+96
+00:05:28,061 --> 00:05:32,065
+a scaler would that be okay and the
+answer is
+
+97
+00:05:32,065 --> 00:05:35,111
+yes biggest this is not a multi key
+
+98
+00:05:36,011 --> 00:05:40,039
+index in a way that says 0 be always has
+to be an array
+
+99
+00:05:40,039 --> 00:05:44,048
+its MOT key index and allows any
+combination so for instance
+
+100
+00:05:44,048 --> 00:05:48,071
+a can be in Arabi can be a scale or or
+be can be an array in a can be a scale
+
+101
+00:05:48,071 --> 00:05:49,072
+and they're both legal
+
+102
+00:05:49,081 --> 00:05:52,174
+is that you can anyone document we're
+both anbe
+
+103
+00:05:53,074 --> 00:05:56,105
+in this compound index are both a race I
+hope that's clear
+
+104
+00:05:57,005 --> 00:06:00,093
+and the other thing is that once an
+accident upgraded to multi key
+
+105
+00:06:00,093 --> 00:06:03,141
+if you dropped all documents are this
+collection it would still say it was not
+
+106
+00:06:04,041 --> 00:06:05,077
+a key we didn't explain
+
+107
+00:06:05,077 --> 00:06:08,169
+on the collection so the key takeaways
+here is that
+
+108
+00:06:09,069 --> 00:06:12,137
+you can at indexes honourees and
+
+109
+00:06:13,037 --> 00:06:16,114
+you can create copper indexes that
+include a raise but when you have an
+
+110
+00:06:17,014 --> 00:06:20,016
+index that is more tricky and where at
+least one document has
+
+111
+00:06:20,034 --> 00:06:24,048
+value being an array you can have
+multiple values have a compaq index both
+
+112
+00:06:24,048 --> 00:06:24,115
+be an array
+
+113
+00:06:25,015 --> 00:06:29,069
+that's not legal alright time for quiz
+multi key indexes
+
+114
+00:06:29,069 --> 00:06:32,128
+suppose we have a collection through has
+index created as follows:
+
+115
+00:06:33,028 --> 00:06:37,075
+who created next a one be one just seem
+very familiar to you
+
+116
+00:06:37,075 --> 00:06:38,128
+if you watch the lesson
+
+117
+00:06:39,028 --> 00:06:42,035
+which have these following inserts our
+ballot this collection
+
+118
+00:06:42,035 --> 00:06:43,069
+check all that apply
+

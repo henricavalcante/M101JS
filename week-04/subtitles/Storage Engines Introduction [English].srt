@@ -1,0 +1,342 @@
+1
+00:00:00,006 --> 00:00:03,100
+this week is mostly about indexing and
+at the very end the week we're gonna
+
+2
+00:00:04,000 --> 00:00:05,004
+talk about charting
+
+3
+00:00:05,004 --> 00:00:08,163
+which is distributing database queries
+across multiple servers
+
+4
+00:00:08,559 --> 00:00:12,000
+but before we do that we need to
+introduce you to the idea of what a
+
+5
+00:00:12,000 --> 00:00:13,016
+storage engine is
+
+6
+00:00:13,016 --> 00:00:16,725
+inside the database because this was a
+big year from on BB
+
+7
+00:00:16,869 --> 00:00:20,100
+new manga to be 3.0 is that we offer
+
+8
+00:00:20,001 --> 00:00:23,013
+pluggable storage engines now what is a
+storage engine
+
+9
+00:00:23,022 --> 00:00:26,661
+a storage engine is the interface
+between
+
+10
+00:00:26,859 --> 00:00:30,934
+the persistent storage which will call
+the desks but might be solved a desk
+
+11
+00:00:31,609 --> 00:00:36,540
+and the database itself Mongo DB and
+this is the Mongo DB server
+
+12
+00:00:36,054 --> 00:00:40,075
+so mama DB server talks to the desk the
+persistent storage
+
+13
+00:00:40,075 --> 00:00:43,474
+through a storage engine so this
+
+14
+00:00:44,149 --> 00:00:48,250
+that the storage engine right there and
+you the program are you gonna be writing
+
+15
+00:00:48,025 --> 00:00:51,031
+say a pipe bomb program and CV writing
+in Python
+
+16
+00:00:51,085 --> 00:00:54,152
+and it'll be using the pie Mongo
+
+17
+00:00:55,052 --> 00:00:58,071
+driver which talked to the database
+server
+
+18
+00:00:58,071 --> 00:01:01,100
+using the wire protocol and when it
+wants to
+
+19
+00:01:02,000 --> 00:01:05,059
+create data re data update and delete
+data
+
+20
+00:01:05,059 --> 00:01:09,150
+ill talk to the storage engine which
+will then talk to the desk
+
+21
+00:01:09,015 --> 00:01:14,032
+and all the different structures the
+whole the document that old indexes in
+
+22
+00:01:14,032 --> 00:01:16,038
+the meta data involving the documents
+
+23
+00:01:16,038 --> 00:01:19,049
+are all written to the persistent
+storage by this
+
+24
+00:01:19,049 --> 00:01:23,718
+storage engine now it may be the case
+that the storage engine itself decides
+
+25
+00:01:24,159 --> 00:01:24,850
+to use
+
+26
+00:01:24,085 --> 00:01:28,132
+memory to optimize the process so in
+other words
+
+27
+00:01:29,032 --> 00:01:34,081
+disc is really slow so since the idea
+databases to store stuff persistently
+
+28
+00:01:34,369 --> 00:01:38,390
+what happens is the storage engine has
+control of memory on your computer
+
+29
+00:01:38,579 --> 00:01:41,770
+and they can decide what to put in
+memory
+
+30
+00:01:41,077 --> 00:01:44,816
+and what they got a memory and what to
+persist a desk in when
+
+31
+00:01:45,509 --> 00:01:49,516
+to database server itself defers the
+handling of the memory on the server
+
+32
+00:01:49,579 --> 00:01:53,020
+as well as disc itself to storage engine
+now
+
+33
+00:01:53,002 --> 00:01:56,141
+we offer a pluggable storage engine
+architecture
+
+34
+00:01:56,159 --> 00:02:00,000
+where you can use more than one the idea
+here is that let's say you had a car and
+
+35
+00:02:00,000 --> 00:02:01,007
+you wanted to have
+
+36
+00:02:01,007 --> 00:02:04,045
+different engines you could put the
+engine in the car and that it would
+
+37
+00:02:04,045 --> 00:02:05,096
+probably change the cars
+
+38
+00:02:05,096 --> 00:02:08,114
+performance characteristics for instance
+it might
+
+39
+00:02:09,014 --> 00:02:12,061
+accelerate faster or might get better or
+worse gas mileage
+
+40
+00:02:12,061 --> 00:02:15,082
+because the type engine you put into
+your car
+
+41
+00:02:15,082 --> 00:02:19,086
+and so early depending on the type
+engine that you put into manga DB
+
+42
+00:02:19,086 --> 00:02:21,163
+you're going to get different
+performance characteristics and that's
+
+43
+00:02:22,063 --> 00:02:24,075
+why it's important that we have some
+basic understanding this
+
+44
+00:02:24,075 --> 00:02:28,148
+before we move on this week there are
+two main storage engine the chipmunk DB
+
+45
+00:02:29,048 --> 00:02:30,049
+that we support
+
+46
+00:02:30,049 --> 00:02:34,105
+and one of them is called and map and
+the other one is called wired Tiger
+
+47
+00:02:35,005 --> 00:02:38,077
+and that is the default it's what you
+get if you don't given the options to
+
+48
+00:02:38,077 --> 00:02:39,174
+manga de when you start at the command
+line
+
+49
+00:02:40,074 --> 00:02:43,118
+and evaporated with have this work has
+been the storage engine for quite a
+
+50
+00:02:44,018 --> 00:02:44,066
+while
+
+51
+00:02:44,066 --> 00:02:47,113
+wire Tiger came into acquisition 2014
+
+52
+00:02:48,013 --> 00:02:51,068
+Mongo DB acquired the White Paper
+Company is the same
+
+53
+00:02:51,068 --> 00:02:55,347
+team that built Berkeley DB and also a
+lot of them were at the company sleepy
+
+54
+00:02:55,959 --> 00:02:56,390
+cat
+
+55
+00:02:56,039 --> 00:02:59,047
+if you know your computer history
+alright
+
+56
+00:02:59,047 --> 00:03:02,073
+so now I have some basic understanding
+about a storied engineers so what is the
+
+57
+00:03:02,073 --> 00:03:03,102
+store and engine not
+
+58
+00:03:04,002 --> 00:03:07,035
+what are some other things the storage
+engine doesn't handle well if you have a
+
+59
+00:03:07,035 --> 00:03:09,094
+bunch of Mongo DB servers all running in
+a cluster
+
+60
+00:03:09,094 --> 00:03:12,125
+the storage engine doesn't affect the
+communication between Nos
+
+61
+00:03:13,025 --> 00:03:16,070
+different Mongo DB servers and the
+Georgian doesn't affect
+
+62
+00:03:16,007 --> 00:03:19,053
+the API that database presents to the
+programmer
+
+63
+00:03:20,016 --> 00:03:23,345
+for example its the same pretty much
+where they're not use a map or white
+
+64
+00:03:23,489 --> 00:03:23,950
+tiger
+
+65
+00:03:23,095 --> 00:03:25,161
+but there are going to be some
+differences in performance and that's
+
+66
+00:03:26,061 --> 00:03:26,147
+why we're going to Scotts
+
+67
+00:03:27,047 --> 00:03:31,113
+alright now it's time for Chris storage
+engine directly determines which of the
+
+68
+00:03:32,013 --> 00:03:32,066
+following
+
+69
+00:03:32,066 --> 00:03:35,154
+check all that apply the data file
+format architecture a cluster
+
+70
+00:03:36,054 --> 00:03:39,113
+the wire protocol for the drivers and
+the format the indexes
+
+71
+00:03:40,013 --> 00:03:43,017
+I didn't directly talk about some of
+these so you might have to guess based
+
+72
+00:03:43,053 --> 00:03:43,108
+on what I said
+
