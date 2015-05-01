@@ -114,19 +114,17 @@ function PostsDAO(db) {
     this.incrementLikes = function(permalink, comment_ordinal, callback) {
         "use strict";
 
-        // The "comment_ordinal" argument specifies which comment in the post we are looking at
-        // Here is an example of how to build a selector with the 'comment_ordinal' variable
-        // We have to do it this way because a literal object with variables in field names such as:
-        // { 'comments.' + comment_ordinal + '.author' : 'Frank' } is illegal Javascript.
-        var selector_example = {};
-        var comment_ordinal_example = 0;
-        selector_example['comments.' + comment_ordinal_example + '.author'] = 'Frank';
-        // Now selector_example = { 'comments.0.author' : 'Frank' } which is a selector for the
-        // string 'Frank' in the 'author' field of the first element of the 'comments' array (which
-        // is zero indexed).
+        var inc = {};
+        inc['comments.'+comment_ordinal+'.num_likes'] = 1; 
 
-        // TODO: Final exam question - Increment the number of likes
-        callback(Error("incrementLikes NYI"), null);
+      posts.update({'permalink':permalink},
+        {'$inc':inc},
+        function(err, num) {
+            if (err) return callback(err, null);
+
+            callback(err, permalink);
+        })
+        
     }
 }
 
